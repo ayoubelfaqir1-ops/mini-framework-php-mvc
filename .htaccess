@@ -1,0 +1,9 @@
+# Block access via localhost, only allow custom domain
+RewriteEngine On
+RewriteCond %{HTTP_HOST} !^framework-minimaliste\.test$ [NC]
+RewriteRule ^ - [F]
+
+# If accessed via correct domain, redirect to public folder
+RewriteCond %{HTTP_HOST} ^framework-minimaliste\.test$ [NC]
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]
