@@ -9,8 +9,8 @@ class User extends Model
     
     public function findByEmail($email)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = ?");
-        $stmt->execute([$email]);
+        $sql = "SELECT * FROM {$this->table} WHERE email = ?";
+        $stmt = $this->db->query($sql, [$email]);
         return $stmt->fetch();
     }
 }

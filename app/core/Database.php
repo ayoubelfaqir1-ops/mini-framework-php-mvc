@@ -1,6 +1,8 @@
 <?php
 namespace App\core;
 
+use PDOException;
+
 class Database
 {
     private static $instance = null;
@@ -8,8 +10,8 @@ class Database
     
     private function __construct()
     {
-        $config = require_once 'config/config.php';
-        $dsn = "mysql:host={$config['db_host']};dbname={$config['db_name']};charset=utf8";
+        $config = include __DIR__ . '/../../config/config.php';
+        $dsn = "mysql:host={$config['db_host']};dbname={$config['db_name']};charset=utf8mb4";
         
         $this->connection = new \PDO($dsn, $config['db_user'], $config['db_pass'], [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
@@ -22,6 +24,17 @@ class Database
         if (self::$instance === null) {
             self::$instance = new self();
         }
-        return self::$instance->connection;
+        return self::$instance;
+    }
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+    public static function query($sql, $param = [])
+    {
+        $stmt = self::getInstance()->getConnection()->prepare($sql);
+        $stmt->execute($param);
+        return $stmt;
     }
 }
