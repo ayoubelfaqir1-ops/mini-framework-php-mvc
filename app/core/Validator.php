@@ -3,38 +3,62 @@ namespace App\core;
 
 class Validator
 {
+    private $data;
     private $errors = [];
-    
-    public function required($field, $value)
+
+    public function __construct($data)
     {
-        if (empty($value)) {
-            $this->errors[$field] = "{$field} is required";
+        $this->data = $data;
+    }
+
+    public function required($fields)
+    {
+        foreach ((array)$fields as $field) {
+            if (empty($this->data[$field])) {
+                $this->errors[$field] = "$field is required";
+            }
         }
         return $this;
     }
-    
-    public function email($field, $value)
+
+    public function email($field)
     {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $this->errors[$field] = "{$field} must be a valid email";
+        if (isset($this->data[$field]) && !filter_var($this->data[$field], FILTER_VALIDATE_EMAIL)) {
+            $this->errors[$field] = "$field must be a valid email";
         }
         return $this;
     }
-    
-    public function min($field, $value, $min)
+
+    public function min($field, $length)
     {
-        if (strlen($value) < $min) {
-            $this->errors[$field] = "{$field} must be at least {$min} characters";
+        if (isset($this->data[$field]) && strlen($this->data[$field]) < $length) {
+            $this->errors[$field] = "$field must be at least $length characters";
         }
         return $this;
     }
-    
-    public function hasErrors()
+
+    public function max($field, $length)
+    {
+        if (isset($this->data[$field]) && strlen($this->data[$field]) > $length) {
+            $this->errors[$field] = "$field must not exceed $length characters";
+        }
+        return $this;
+    }
+
+    public function numeric($field)
+    {
+        if (isset($this->data[$field]) && !is_numeric($this->data[$field])) {
+            $this->errors[$field] = "$field must be numeric";
+        }
+        return $this;
+    }
+
+    public function fails()
     {
         return !empty($this->errors);
     }
-    
-    public function getErrors()
+
+    public function errors()
     {
         return $this->errors;
     }
