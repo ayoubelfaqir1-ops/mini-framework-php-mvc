@@ -3,9 +3,11 @@ namespace App\core;
 
 class Session
 {
-    public static function start()
+    public static function start($lifetime = 3600)
     {
         if (session_status() === PHP_SESSION_NONE) {
+            ini_set('session.gc_maxlifetime', $lifetime);
+            session_set_cookie_params($lifetime);
             session_start();
         }
     }
