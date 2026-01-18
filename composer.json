@@ -1,5 +1,5 @@
 {
-    "name": "ayoub/framework-minimaliste",
+    "name": "ayoub-php/framework-minimaliste",
     "autoload": {
         "psr-4": {
             "App\\": "app/"
@@ -11,5 +11,7 @@
             "email": "ayoub.elfaqir1@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.0"
+    }
 }
